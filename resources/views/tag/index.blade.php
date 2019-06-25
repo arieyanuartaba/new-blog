@@ -26,7 +26,7 @@
                         <tr>
                             <td>{{++$index}}</td>
                             <td>{{$tag->name}}</td>
-                            <td>0</td>
+                            <td>{{$tag->posts->count()}}</td>
                             <td>
                                 <a href="{{route('tags.edit', $tag->id)}}" class="btn btn-sm btn-info">Edit</a>
                                 <button class="btn btn-sm btn-danger" onclick="handleDelete({{ $tag->id }})">Delete</button>

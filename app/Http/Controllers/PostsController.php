@@ -7,6 +7,7 @@ use App\Http\Requests\posts\createPostRequest;
 
 use App\Post;
 use App\Category;
+use App\Tag;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\posts\updatePostRequest;
 
@@ -36,7 +37,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-        return view('post.create')->with('categories', Category::all());
+        return view('post.create')->with('categories', Category::all())->with('tags', Tag::all());
     }
 
     /**
@@ -47,10 +48,10 @@ class PostsController extends Controller
      */
     public function store(createPostRequest $request)
     {
-        // dd($request->image->store('posts'));
+        // dd($request->tags);
         $image = $request->image->store('posts');
 
-        Post::create([
+        $post = Post::create([
             'title' => $request->title,
             'description' => $request->description,
             'content' => $request->description,
@@ -58,6 +59,13 @@ class PostsController extends Controller
             'published_at' => $request->published_at,
             'category_id' => $request->category
         ]);
+
+        if($request->tags){
+
+            $post->tags()->attach($request->tags);
+        }
+
+        
 
         session()->flash('success', 'Post successfully create');
 
@@ -84,7 +92,7 @@ class PostsController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('post.create')->with('post', $post)->with('categories', Category::all());
+        return view('post.create')->with('post', $post)->with('categories', Category::all())->with('tags', Tag::all());
     }
 
     /**
@@ -96,7 +104,7 @@ class PostsController extends Controller
      */
     public function update(updatePostRequest $request, Post $post)
     {
-        
+       
         $data = $request->only(['title', 'description', 'content', 'published_at', 'category']);
         //check if has image
         if($request->hasFile('image')){
@@ -112,8 +120,17 @@ class PostsController extends Controller
 
         $cat = $request->category;
         $data['category_id'] = $cat;
+
+        if($request->tags){
+
+            $post->tags()->sync($request->tags);
+        }
+
         //update data
         $post->update($data);
+
+        //Sync to tag
+       
 
         //flash message
         Session()->flash('success', 'Post update successfully');
@@ -169,4 +186,6 @@ class PostsController extends Controller
 
         return redirect(route('posts.index'));
     }
+
+    
 }
