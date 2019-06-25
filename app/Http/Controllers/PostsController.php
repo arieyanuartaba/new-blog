@@ -14,6 +14,11 @@ use App\Http\Requests\posts\updatePostRequest;
 class PostsController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('createCategory')->only('create', 'store');
+    }
+
     /**
      * Display a listing of the resource.
      *
