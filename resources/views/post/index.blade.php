@@ -17,6 +17,7 @@
                     <tr>
                         <th>Image</th>
                         <th>Title</th>
+                        <th>Category</th>
                         <th></th>
                         <th></th>
                     </tr>
@@ -29,6 +30,7 @@
                                 <img src="{{ asset('/storage/'.$post->image) }}" alt="{{$post->title}}" style="width: 100px; height:auto;">
                             </td>
                             <td>{{$post->title}}</td>
+                            <td>{{$post->category->name}}</td>
                             <td>
                                 @if($post->trashed())
                                     <form action="{{route('trashed-post.restore', $post->id)}}" method="POST">
