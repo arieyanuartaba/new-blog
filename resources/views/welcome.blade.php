@@ -1,99 +1,65 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.blog')
 
-        <title>Laravel</title>
+@section('title')
+  ThePost Blog
+@endsection
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+@section('header')
+<!-- Header -->
+<header class="header text-center text-white" style="background-image: linear-gradient(-225deg, #5D9FFF 0%, #B8DCFF 48%, #6BBBFF 100%);">
+  <div class="container">
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
+    <div class="row">
+      <div class="col-md-8 mx-auto">
 
-            .full-height {
-                height: 100vh;
-            }
+        <h1>Latest Blog Posts</h1>
+        <p class="lead-2 opacity-90 mt-6">Read and get updated on how we progress</p>
 
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
+      </div>
+    </div>
 
-            .position-ref {
-                position: relative;
-            }
+  </div>
+</header>
+<!-- /.header -->
+@endsection
 
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
+@section('content')
+<!-- Main Content -->
+<main class="main-content">
+  <div class="section bg-gray">
+    <div class="container">
+      <div class="row">
 
-            .content {
-                text-align: center;
-            }
 
-            .title {
-                font-size: 84px;
-            }
+        <div class="col-md-8 col-xl-9">
+          <div class="row gap-y">
 
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
-
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
-                        @endif
-                    @endauth
+            @forelse($posts as $post)
+            <div class="col-md-6">
+                <div class="card border hover-shadow-6 mb-6 d-block">
+                    <a href="{{route('blog.show',$post->id)}}"><img class="card-img-top" src="{{asset('storage/'.$post->image)}}" alt="Card image cap"></a>
+                    <div class="p-6 text-center">
+                    <p><a class="small-5 text-lighter text-uppercase ls-2 fw-400" href="#">{{$post->category->name}}</a></p>
+                    <h5 class="mb-0"><a class="text-dark" href="{{route('blog.show',$post->id)}}">{{$post->title}}</a></h5>
+                    </div>
                 </div>
-            @endif
-
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
                 </div>
+            @empty
+              <img src="{{asset('img/no_data_found.png')}}" alt="no post" style="width:100%; height:auto" class="justify-content-center">      
+            @endforelse
 
-                <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
-            </div>
+          </div>
+
+         
+          {{  $posts->appends(['search' => request()->query('search')])->links() }}
         </div>
-    </body>
-</html>
+
+
+
+        @include('layouts.partial.sidebar')
+
+      </div>
+    </div>
+  </div>
+</main>
+@endsection

@@ -2,22 +2,13 @@
 
 @section('content')
 
-@if($errors->any())
-    <div class="alert alert-danger">
-        @foreach($errors->all() as $error)
-            <ul class="list-group">
-                <li class="list-group-item">{{$error}}</li>
-            </ul>
-        @endforeach
-    </div>
-@endif
-
 <div class="card card-default">
     <div class="card-header">
         {{ isset($post) ? 'Edit a post' : 'Create a post' }}
     </div>
 
     <div class="card-body">
+        @include('layouts.partial.error')
         <form action="{{ isset($post) ? route('posts.update',$post->id) : route('posts.store')}}" method="POST" enctype="multipart/form-data">
             @csrf
             @if(isset($post))
@@ -101,7 +92,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/js/select2.min.js"></script>
     <script>
        flatpickr('#published_at', {
-           enableTime: true
+           enableTime: true,
+           enableSeconds: true
        })
 
        $(document).ready(function() {
